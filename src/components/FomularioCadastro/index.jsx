@@ -1,11 +1,32 @@
-import React, { Component } from "react";
+import { Component } from "react";
 import "./styles.css";
 class FormularioCadastro extends Component {
 
   constructor(props){
     super(props);
-    this.titulo ="";
-    this.texto ="";
+    this.titulo = "";
+    this.texto = "";
+    this.categoria = "Sem Categoria";
+    this.state = { categorias: [] }
+
+    this._novasCategorias = this._novasCategorias.bind(this);
+  }
+
+  componentDidMount(){
+    this.props.categorias.inscrever(this._novasCategorias)
+  }
+
+  componentWillUnmount(){
+    this.props.categorias.desinscrever(this._novasCategorias);
+  }
+
+  _novasCategorias(categorias){
+    this.setState({...this.state, categorias})
+  }
+
+  _handleMundancaCategoria(evento){
+    evento.stopPropagation()
+    this.categoria = evento.target.value
   }
 
   _handleMudancaTitulo(evento){
@@ -21,7 +42,7 @@ class FormularioCadastro extends Component {
   _criarNota(evento){
     evento.preventDefault();
     evento.stopPropagation();
-    this.props.criarNota(this.titulo, this.texto);
+    this.props.criarNota(this.titulo, this.texto, this.categoria);
     
   }
 
@@ -30,9 +51,12 @@ class FormularioCadastro extends Component {
       <form className="form-cadastro"
         onSubmit={this._criarNota.bind(this)}
       >
-        <select className="form-cadastro-input" >
-          {this.props.categorias.map(categoria => {
-            return <option>{categoria}</option>
+        <select onChange={this._handleMundancaCategoria.bind(this)}
+          className="form-cadastro-input"
+        >
+          <option>Sem Categoria</option>
+          {this.state.categorias.map((categoria, index) => {
+            return <option key={index}>{categoria}</option>
           })}
         </select>
         <input
