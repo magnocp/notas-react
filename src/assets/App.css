@@ -13,3 +13,9 @@
   --fundo: #ffffff;
   --fundo-detalhes: #ececec;
 }
+
+@media (max-width: 900px) {
+  .conteudo {
+    flex-direction: column;
+  }
+}
